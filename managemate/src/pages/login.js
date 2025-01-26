@@ -1,14 +1,18 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createGlobalStyle } from 'styled-components';
 import axios from 'axios';
 
+
 function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  
+ 
   const [error, setError] = useState(""); // Error state to hold error messages
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,23 +22,32 @@ function Login() {
     }));
   };
 
+
   function handleSubmit(event) {
     event.preventDefault();
-    
+   
     // Reset error before making a new login attempt
     setError("");
 
+
     axios
-      .post('http://localhost:8081/login', formData)
+      .post('http://localhost:3001/login', formData)
       .then((res) => {
         console.log(res);
-        // Handle success, possibly redirect or do something else
+
+        // Check if login is successful
+        if (res.data.success) {
+          navigate("/dashboard"); // Redirect to dash.js
+        } else {
+          setError("Invalid credentials. Please try again.");
+        }
       })
       .catch((err) => {
         console.error(err);
         setError("Login failed. Please check your credentials and try again.");
       });
   }
+
 
   return (
     <div className="login-page">
@@ -61,20 +74,24 @@ function Login() {
           <button type="submit">Log In</button>
         </form>
       </div>
-      <p className="signup-link">Don't have an account? <a href="signup">Sign Up</a>
+      <p className="signup-link">
+        Don't have an account? <a href="signup">Sign Up</a>
       </p>
     </div>
   );
 }
 
+
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
 
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
+
 
   body {
     font-family: 'Poppins', sans-serif;
@@ -86,6 +103,7 @@ const GlobalStyle = createGlobalStyle`
     position: relative;
   }
 
+
   .login-page {
     display: flex;
     flex-direction: column;
@@ -93,6 +111,7 @@ const GlobalStyle = createGlobalStyle`
     align-items: center;
     width: 100%;
   }
+
 
   .title {
     font-size: 80px;
@@ -102,6 +121,7 @@ const GlobalStyle = createGlobalStyle`
     text-align: center;
     letter-spacing: 2px;
   }
+
 
   .form-container {
     background-color: rgba(255, 255, 255, 0.9);
@@ -114,6 +134,7 @@ const GlobalStyle = createGlobalStyle`
     max-width: 800px;
   }
 
+
   input {
     width: 100%;
     padding: 15px;
@@ -122,6 +143,7 @@ const GlobalStyle = createGlobalStyle`
     border-radius: 8px;
     font-size: 16px;
   }
+
 
   button {
     width: 100%;
@@ -134,24 +156,29 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
+
   .error-message {
     color: #e74c3c;
     font-size: 14px;
   }
 
+
   .signup-link {
     margin-top: 20px;
   }
+
 
   .signup-link a {
     color: #5C2D91;
     text-decoration: none;
   }
 
+
   .signup-link a:hover {
     text-decoration: underline;
   }
 `;
+
 
 function App() {
   return (
@@ -162,4 +189,8 @@ function App() {
   );
 }
 
+
 export default App;
+
+
+

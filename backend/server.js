@@ -1,12 +1,11 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
-const signupRoutes = require("./signup_b"); // Import the router
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use("/", signupRoutes);  // Use the signupRoutes
+
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -15,6 +14,12 @@ const db = mysql.createConnection({
   database: "managemate",
   port: 3307,
 });
+
+const eventRouter = require('./dash_b')
+const signupRouter = require('./signup_b')
+
+app.use('/', eventRouter)
+app.use('/', signupRouter)
 
 app.post('/login', (req, res) => {
   const sql = "SELECT email, password FROM signup WHERE email = ? AND password = ?";
@@ -31,6 +36,6 @@ app.post('/login', (req, res) => {
 });
 
 // Start Server
-app.listen(8081, () => {
+app.listen(3001, () => {
   console.log("Listening...");
 });

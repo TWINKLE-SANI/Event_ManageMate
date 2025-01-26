@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createGlobalStyle } from 'styled-components';
 import axios from 'axios';
 
+
 function SignUp() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -11,7 +14,11 @@ function SignUp() {
   });
 
 
+
+
   const [error, setError] = useState("");
+
+
 
 
   // Handle changes in the form fields
@@ -24,17 +31,25 @@ function SignUp() {
   };
 
 
+
+
   // Handle form submission
   function handleSubmit(event) {
     event.preventDefault();
-    
+   
     // Reset error before making a new login attempt
     setError("");
 
+
     axios
-      .post('http://localhost:8081/signup', formData)
+      .post('http://localhost:3001/signup', formData)
       .then((res) => {
         console.log(res);
+        if (res.data.success) {
+          navigate("/dashboard"); // Redirect to dash.js
+        } else {
+          setError("Invalid credentials. Please try again.");
+        }
         // Handle success, possibly redirect or do something else
       })
       .catch((err) => {
@@ -42,6 +57,8 @@ function SignUp() {
         setError("Signup failed. Please try again.");
       });
   }
+
+
 
 
   return (
@@ -90,8 +107,12 @@ function SignUp() {
 }
 
 
+
+
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+
 
 
   * {
@@ -99,6 +120,8 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
+
+
 
 
   body {
@@ -112,6 +135,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
 
+
+
   .signup-page {
     display: flex;
     flex-direction: column;
@@ -119,6 +144,8 @@ const GlobalStyle = createGlobalStyle`
     align-items: center;
     width: 100%;
   }
+
+
 
 
   .title {
@@ -129,6 +156,8 @@ const GlobalStyle = createGlobalStyle`
     text-align: center;
     letter-spacing: 2px;
   }
+
+
 
 
   .form-container {
@@ -143,6 +172,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
 
+
+
   input {
     width: 100%;
     padding: 15px;
@@ -151,6 +182,8 @@ const GlobalStyle = createGlobalStyle`
     border-radius: 8px;
     font-size: 16px;
   }
+
+
 
 
   button {
@@ -165,11 +198,15 @@ const GlobalStyle = createGlobalStyle`
   }
 
 
+
+
   .error-message {
     color: #e74c3c;
     font-size: 14px;
   }
 `;
+
+
 
 
 function App() {
@@ -182,7 +219,15 @@ function App() {
 }
 
 
+
+
 export default App;
+
+
+
+
+
+
 
 
 
